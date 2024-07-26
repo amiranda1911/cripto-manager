@@ -34,5 +34,17 @@ class ResourceRequest {
         return currencies!!
     }
 
+    fun getIconFromApi(symbol : String) : String {
+        var request = Request.Builder()
+            .url("https://statics.foxbit.com.br/icons/colored/$symbol.svg")
+            .build()
+        var response = client.newCall(request).execute()
+
+        if (response.isSuccessful){
+            val svg = response.body?.string()
+            return svg!!
+        }
+        return null!!
+    }
 
 }
