@@ -1,13 +1,17 @@
 package br.dev.amiranda.criptomanager.viewadapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.PictureDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.dev.amiranda.criptomanager.R
 import br.dev.amiranda.criptomanager.utils.Currency
+import com.caverock.androidsvg.SVG
 
 class CurrencyViewAdapter(
         private val context : Context,
@@ -19,9 +23,15 @@ class CurrencyViewAdapter(
             fun bind (currency: Currency) {
                 val name = itemView.findViewById<TextView>(R.id.name)
                 val type = itemView.findViewById<TextView>(R.id.type)
-
+                val icon = itemView.findViewById<ImageView>(R.id.icon)
                 name.text = currency.name
                 type.text = currency.type
+                icon.setImageDrawable(svg2drawable(currency.icon))
+            }
+
+            fun svg2drawable (svgString: String): Drawable {
+                val svg = SVG.getFromString(svgString)
+                return PictureDrawable(svg.renderToPicture())
             }
         }
 
@@ -40,4 +50,7 @@ class CurrencyViewAdapter(
         val currency = currencies[position]
         holder.bind(currency)
     }
+
+
+
 }
