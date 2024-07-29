@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import br.dev.amiranda.criptomanager.ResourceRequest
+import kotlinx.coroutines.delay
 
 class LocalDatabase(context: Context){
 
@@ -21,18 +22,21 @@ class LocalDatabase(context: Context){
     }
 
     @SuppressLint("Range")
-    fun getCoinIcon(symbol: String): String {
+    suspend fun getCoinIcon(symbol: String): String {
         val db = dbHelper.writableDatabase
-        var svg = ""
+        var svg: String
 
-        val cursor = db.query("icons",null,null, null,null, null, null )
+        val cursor = db.query("icons",null,"symbol = \"$symbol\"", null,null, null, null )
         if(cursor.moveToFirst()){
-            var svg = cursor.getString(cursor.getColumnIndex("svg"))
-            if(svg == ""){
-                svg = ResourceRequest().run() { getIconFromApi(symbol) }
-                addIcon(symbol, svg)
-            }
+            svg = cursor.getString(cursor.getColumnIndex("svg"))
         }
+        else{
+            svg = ResourceRequest().run() { getIconFromApi(symbol) }
+            addIcon(symbol, svg)
+        }
+
+        //Foxbit app limits 6 requests per second
+        delay(170)
         return svg
     }
 }
