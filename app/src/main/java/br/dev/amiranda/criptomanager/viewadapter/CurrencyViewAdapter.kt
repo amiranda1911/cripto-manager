@@ -1,5 +1,6 @@
 package br.dev.amiranda.criptomanager.viewadapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
@@ -14,12 +15,21 @@ import br.dev.amiranda.criptomanager.utils.Currency
 import com.caverock.androidsvg.SVG
 
 class CurrencyViewAdapter(
-        private val context : Context,
-        private val currencies: List<Currency>
+        private val listener: OnItemClickListener,
+        private var currencies: List<Currency>
     )
     : RecyclerView.Adapter<CurrencyViewAdapter.ViewHolder>() {
 
-        class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
+        interface OnItemClickListener {
+            fun onItemClick(currency: Currency)
+        }
+
+        inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
+            init{
+                view.setOnClickListener {
+                    listener.onItemClick(currencies[adapterPosition])
+                }
+            }
             fun bind (currency: Currency) {
                 val name = itemView.findViewById<TextView>(R.id.name)
                 val type = itemView.findViewById<TextView>(R.id.type)
@@ -49,6 +59,12 @@ class CurrencyViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currency = currencies[position]
         holder.bind(currency)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateCurrencies(newCurrencies: List<Currency>) {
+        currencies = newCurrencies
+        notifyDataSetChanged() // Notifica o adaptador sobre as mudanças
     }
 
 

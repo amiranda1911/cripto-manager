@@ -51,5 +51,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0")
+    // https://mvnrepository.com/artifact/androidx.fragment/fragment-ktx
+    runtimeOnly("androidx.fragment:fragment-ktx:1.8.2")
+
 
 }
