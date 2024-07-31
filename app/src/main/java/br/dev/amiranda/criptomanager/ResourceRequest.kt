@@ -12,7 +12,7 @@ import java.lang.reflect.Type
 class ResourceRequest {
     private val client = OkHttpClient()
 
-    fun getCurrenciesFromApi(): List<Currency> {
+    suspend fun getCurrenciesFromApi(): List<Currency> {
         var currencies: List<Currency>? = null
 
         var request = Request.Builder()
@@ -35,9 +35,9 @@ class ResourceRequest {
         return currencies!!
     }
 
-    fun getIconFromApi(symbol : String) : String {
+    suspend fun getIconFromApi(symbol : String) : String {
         var request = Request.Builder()
-            .url("https://statics.foxbit.com.br/icons/colored/$symbol.svg")
+            .url("https://statics.foxbit.com.br/icons/colored/${symbol}.svg")
             .build()
         var response = client.newCall(request).execute()
 
@@ -68,17 +68,22 @@ class ResourceRequest {
                 "</svg>"
     }
 
-    fun getMarketTicker(symbol: String ): MarketData{
-        var jsonString = requestResource("https://api.foxbit.com.br/rest/v3/markets/$symbol" + "brl/ticker/24hr")
+    suspend fun getMarketTicker(symbol: String ): MarketData{
+        var marketData: MarketData? = null
+        var jsonString = requestResource("https://api.foxbit.com.br/rest/v3/markets/${symbol}brl/ticker/24hr")
         if (jsonString != null){
             val gson = Gson()
-            return gson.fromJson(jsonString, MarketData::class.java)
+            val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
+            val dataJsonArray = jsonObject.getAsJsonArray("data")
+
+            val type: Type = object : TypeToken<MarketData>() {}.type
+            marketData = gson.fromJson(dataJsonArray[0], type)
         }
-        return null!!
+        return marketData!!
     }
 
 
-    private fun requestResource(url: String) : String?{
+    private suspend fun requestResource(url: String) : String?{
         var request = Request.Builder()
             .url(url)
             .build()
