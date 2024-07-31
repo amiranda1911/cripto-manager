@@ -29,14 +29,16 @@ class LocalDatabase(context: Context){
         val cursor = db.query("icons",null,"symbol = \"$symbol\"", null,null, null, null )
         if(cursor.moveToFirst()){
             svg = cursor.getString(cursor.getColumnIndex("svg"))
+            return svg
         }
         else{
             svg = ResourceRequest().run() { getIconFromApi(symbol) }
             addIcon(symbol, svg)
+            delay(170)
         }
 
         //Foxbit app limits 6 requests per second
-        delay(170)
+
         return svg
     }
 }
