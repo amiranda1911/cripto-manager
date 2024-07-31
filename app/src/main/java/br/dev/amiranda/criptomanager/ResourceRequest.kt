@@ -1,5 +1,6 @@
 package br.dev.amiranda.criptomanager
 
+import br.dev.amiranda.criptomanager.domain.MarketData
 import br.dev.amiranda.criptomanager.utils.Currency
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -65,6 +66,27 @@ class ResourceRequest {
                 "\t\tC182.28,145.591,167.829,141.424,158.009,138.269z\"/>\n" +
                 "</g>\n" +
                 "</svg>"
+    }
+
+    fun getMarketTicker(symbol: String ): MarketData{
+        var jsonString = requestResource("https://api.foxbit.com.br/rest/v3/markets/$symbol" + "brl/ticker/24hr")
+        if (jsonString != null){
+            val gson = Gson()
+            return gson.fromJson(jsonString, MarketData::class.java)
+        }
+        return null!!
+    }
+
+
+    private fun requestResource(url: String) : String?{
+        var request = Request.Builder()
+            .url(url)
+            .build()
+        var response = client.newCall(request).execute()
+
+        if (response.isSuccessful)
+            return response.body?.string()
+        return null!!
     }
 
 }
