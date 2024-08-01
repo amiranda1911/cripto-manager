@@ -69,7 +69,16 @@ class CurrenciesFragment : Fragment(), CurrencyViewAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(currency: Currency) {
-        Toast.makeText(context, currency.name, Toast.LENGTH_SHORT).show()
-        Log.i("click", "onItemClick: ${currency.name}" )
+        val fragment = MarketFragment()
+        val bundle = Bundle()
+
+        bundle.putString("name", currency.name)
+        bundle.putString("symbol", currency.symbol)
+        fragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment)
+            .addToBackStack(null) // Adicionar a transação à pilha de backstack
+            .commit()
     }
 }
