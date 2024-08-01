@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="br.dev.amiranda.criptomanager.CurrenciesFragment"
+
         android:layout_width="397dp"
         android:layout_height="872dp"
         android:layout_marginStart="9dp"
