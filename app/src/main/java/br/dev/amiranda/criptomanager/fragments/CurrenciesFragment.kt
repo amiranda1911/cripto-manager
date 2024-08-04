@@ -1,14 +1,14 @@
-package br.dev.amiranda.criptomanager
+package br.dev.amiranda.criptomanager.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import br.dev.amiranda.criptomanager.R
+import br.dev.amiranda.criptomanager.ResourceRequest
 import br.dev.amiranda.criptomanager.persistence.LocalDatabase
 import br.dev.amiranda.criptomanager.utils.Currency
 import br.dev.amiranda.criptomanager.viewadapter.CurrencyViewAdapter
@@ -16,7 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 
 class CurrenciesFragment : Fragment(), CurrencyViewAdapter.OnItemClickListener {
 
@@ -25,11 +24,6 @@ class CurrenciesFragment : Fragment(), CurrencyViewAdapter.OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
-        // load async concurrency itens with coroutines kotlin
-
     }
 
     override fun onCreateView(
@@ -74,6 +68,9 @@ class CurrenciesFragment : Fragment(), CurrencyViewAdapter.OnItemClickListener {
 
         bundle.putString("name", currency.name)
         bundle.putString("symbol", currency.symbol)
+        bundle.putString("type", currency.type)
+        bundle.putString("icon", currency.icon)
+
         fragment.arguments = bundle
 
         parentFragmentManager.beginTransaction()
