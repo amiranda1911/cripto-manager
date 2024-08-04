@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import br.dev.amiranda.criptomanager.ResourceRequest
-import kotlinx.coroutines.delay
 
 class LocalDatabase(context: Context){
 
@@ -34,7 +33,6 @@ class LocalDatabase(context: Context){
         else{
             svg = ResourceRequest().run() { getIconFromApi(symbol) }
             addIcon(symbol, svg)
-            delay(170)
         }
 
         //Foxbit app limits 6 requests per second
