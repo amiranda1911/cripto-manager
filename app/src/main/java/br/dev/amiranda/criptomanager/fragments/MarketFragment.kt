@@ -1,4 +1,4 @@
-package br.dev.amiranda.criptomanager
+package br.dev.amiranda.criptomanager.fragments
 
 import android.graphics.Color
 import android.graphics.drawable.PictureDrawable
@@ -6,19 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import br.dev.amiranda.criptomanager.R
+import br.dev.amiranda.criptomanager.ResourceRequest
 import br.dev.amiranda.criptomanager.persistence.LocalDatabase
 import br.dev.amiranda.criptomanager.utils.Currency
 import com.caverock.androidsvg.SVG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -31,6 +31,7 @@ class MarketFragment : Fragment() {
     private lateinit var price: TextView
     private lateinit var symbol: TextView
     private lateinit var priceChangePercent: TextView
+    private lateinit var walletButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +51,26 @@ class MarketFragment : Fragment() {
         price = view.findViewById<TextView>(R.id.price)
         symbol = view.findViewById<TextView>(R.id.symbol)
         priceChangePercent = view.findViewById<TextView>(R.id.price_change_percent)
+        walletButton = view.findViewById<Button>(R.id.wallet_button)
 
         return view
+    }
+
+    fun onWalletClick(){
+        val fragment = WalletFragment()
+        val bundle = Bundle()
+
+        bundle.putString("name", currency.name)
+        bundle.putString("symbol", currency.symbol)
+        bundle.putString("type", currency.type)
+        bundle.putString("icon", currency.icon)
+
+        fragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,14 +79,18 @@ class MarketFragment : Fragment() {
         currency = Currency(
             arguments?.getString("name")!!,
             arguments?.getString("symbol")!!,
-            "",
-            ""
+            arguments?.getString("type")!!,
+            arguments?.getString("icon")!!
         )
 
         name.text = currency.name
         symbol.text = currency.symbol
         loadCoinIcon()
         loadMarketData()
+
+        walletButton.setOnClickListener{
+            onWalletClick()
+        }
     }
 
     private fun loadCoinIcon() {
