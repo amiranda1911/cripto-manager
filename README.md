@@ -1,2 +1,2 @@
 ﻿# cripto-manager
-Projeto criado para aplicar os coceitos aprendidos sobre desenvolvimento de apps em kotlin
+Projeto criado para aplicar os conceitos aprendidos sobre desenvolvimento de apps em kotlin
